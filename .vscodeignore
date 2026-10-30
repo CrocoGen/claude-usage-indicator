@@ -1,0 +1,5 @@
+src/**
+node_modules/**
+statusline/**
+.vscodeignore
+package-lock.json

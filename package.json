@@ -1,0 +1,88 @@
+{
+	"name": "claude-usage-indicator",
+	"displayName": "Claude Usage Indicator",
+	"description": "Shows Claude 5-hour and weekly limit usage (%) in the status bar. Optionally appends ChatGPT limits to the tooltip.",
+	"version": "0.0.9",
+	"publisher": "beta",
+	"license": "MIT",
+	"engines": {
+		"vscode": "^1.85.0"
+	},
+	"extensionKind": [
+		"ui"
+	],
+	"activationEvents": [
+		"onStartupFinished"
+	],
+	"main": "./dist/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "claudeUsageIndicator.refresh",
+				"title": "Claude Usage: Refresh"
+			},
+			{
+				"command": "claudeUsageIndicator.configureUngate",
+				"title": "Claude Usage: Configure remote Ungate"
+			},
+			{
+				"command": "claudeUsageIndicator.copyDiagnostics",
+				"title": "Claude Usage: Copy diagnostics"
+			}
+		],
+		"configuration": {
+			"title": "Claude Usage Indicator",
+			"properties": {
+				"claudeUsageIndicator.pollIntervalMinutes": {
+					"type": "number",
+					"default": 5,
+					"minimum": 1,
+					"description": "How often (minutes) to query usage."
+				},
+				"claudeUsageIndicator.showChatGpt": {
+					"type": "boolean",
+					"default": false,
+					"description": "Append ChatGPT plan limits to the status-bar tooltip. Off leaves the status bar and tooltip unchanged. The access token is read from Ungate (openai provider) or ~/.codex/auth.json and is not refreshed."
+				},
+				"claudeUsageIndicator.codexAuthPath": {
+					"type": "string",
+					"default": "",
+					"description": "Codex auth file for ChatGPT limits (default: ~/.codex/auth.json). Used only when showChatGpt is enabled."
+				},
+				"claudeUsageIndicator.ungateUrl": {
+					"type": "string",
+					"default": "",
+					"description": "Base URL of a remote Ungate (e.g. Cloudflare tunnel). If set, the extension sends a 1-token probe request and reads anthropic-ratelimit-unified-* headers. API key is stored in SecretStorage (command: Configure remote Ungate)."
+				},
+				"claudeUsageIndicator.probeModel": {
+					"type": "string",
+					"default": "claude-haiku-4-5",
+					"description": "Model id for the probe request to remote Ungate (cheapest model recommended)."
+				},
+				"claudeUsageIndicator.ungateDir": {
+					"type": "string",
+					"default": "",
+					"description": "Ungate data dir (default: ~/.ungate)."
+				},
+				"claudeUsageIndicator.claudeCredentialsPath": {
+					"type": "string",
+					"default": "",
+					"description": "Claude Code credentials file (default: ~/.claude/.credentials.json)."
+				},
+				"claudeUsageIndicator.statuslineCachePath": {
+					"type": "string",
+					"default": "",
+					"description": "Fallback JSON written by Claude Code statusline (default: ~/.claude/usage-cache.json)."
+				}
+			}
+		}
+	},
+	"scripts": {
+		"build": "esbuild src/extension.js --bundle --platform=node --target=node20 --external:vscode --external:node:sqlite --outfile=dist/extension.js",
+		"package": "npm run build && vsce package --no-dependencies --allow-missing-repository --skip-license"
+	},
+	"devDependencies": {
+		"@vscode/vsce": "^3.2.0",
+		"esbuild": "^0.24.0"
+	}
+}
