@@ -12,6 +12,8 @@ The package contains no tokens or API keys.
 
 The status bar shows `5h` and `wk`. The tooltip has the reset times.
 
+![Claude 5-hour and weekly limits, with ChatGPT in the tooltip](screenshot.png)
+
 ## Same computer as Ungate
 
 Leave the remote URL empty. The extension reads the OAuth tokens Ungate already stores in `~/.ungate/data.db` and asks Claude and ChatGPT for the limits. The built-in Ungate tunnel is not used.
